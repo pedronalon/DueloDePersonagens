@@ -2,7 +2,7 @@ package trabalho.duelodepersonagens;
 
 public class Mago {
     private String nome;
-    private int PontosDeVida = 100;
+    private int PontosDeVida = 10123;
     private final int forcaDeAtaque = 10;
     private final int forcaDeDefesa = 7;
     private final int AlcanceDeAtaque = 3;
