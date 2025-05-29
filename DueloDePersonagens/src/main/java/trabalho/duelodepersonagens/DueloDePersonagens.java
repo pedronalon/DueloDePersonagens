@@ -20,5 +20,6 @@ public class DueloDePersonagens {
         // - Loop de turnos alternados
         // - Menu de ações: mover, atacar, defender, poder especial
         // - Verificar condição de vitória
+        System.out.println("teste");
     }
 }
