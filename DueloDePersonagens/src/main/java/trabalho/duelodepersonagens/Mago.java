@@ -1,14 +1,14 @@
 package trabalho.duelodepersonagens;
 
-public class Mago {
-    private String nome;
-    private int PontosDeVida = 100;
-    private final int forcaDeAtaque = 10;
-    private final int forcaDeDefesa = 7;
-    private final int AlcanceDeAtaque = 3;
+public class Mago extends Personagem {
+    public Mago(String nome) {
+        super(nome, 10, 7, 3);
+    }
 
-    public Mago(String nome_jogador1){
-        nome = nome_jogador1;
+    @Override
+    public void AtivarPoderEspecial(Personagem inimigo){
+        this.PontosDeVida = inimigo.PontosDeVida;
+        System.out.println("TROCAR VIDA! O mago "+ nome +" troca os seus pontos de vida com seu adversário!!");
     }
 
 }

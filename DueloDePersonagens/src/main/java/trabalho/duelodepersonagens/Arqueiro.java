@@ -1,13 +1,15 @@
 package trabalho.duelodepersonagens;
 
-public class Arqueiro {
-    private String nome;
-    private int PontosDeVida = 100;
-    private final int forcaDeAtaque = 8;
-    private final int forcaDeDefesa = 5;
-    private final int AlcanceDeAtaque = 5;
-
-    public Arqueiro(String nome_jogador1){
-        nome = nome_jogador1;
+public class Arqueiro extends Personagem {
+    public Arqueiro(String nome) {
+        super(nome, 8, 5, 5);
     }
+
+    @Override
+    public void AtivarPoderEspecial(Personagem inimigo){
+        this.AlcanceDeAtaque += 1;
+        System.out.println("FLECHA PRECISA! Arqueiro "+ nome+ "incrementa permanentemente 1 em seu alcance de ataque!!");
+    }
+
+
 }
