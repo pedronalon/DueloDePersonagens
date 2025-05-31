@@ -2,7 +2,7 @@ package trabalho.duelodepersonagens;
 
 public class Mago extends Personagem {
     public Mago(String nome) {
-        super(nome, 10, 7, 3);
+        super(nome,"Mago", 10, 7, 3);
     }
 
     @Override

@@ -1,36 +1,37 @@
 package trabalho.duelodepersonagens;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Jogo {
+    private Personagem Player_1;
+    private Personagem Player_2;
+
     public Jogo() {
-        MenuIniciar();
-        MenuSelecionar();
+        Menus menu = new Menus();
+        this.Player_1 = menu.getPlayer_1();
+        this.Player_2 = menu.getPlayer_2();
+        menu.ImprimeDados(Player_1);
+        iniciar_jogo();
     }
 
-    private static void MenuSelecionar() {
-        Scanner teclado = new Scanner(System.in);
-        int  ModoDeJogo ;
-        boolean a  = true;
-        System.out.println("Selecione o modo de jogo!\n 1: PvP \n 2:PvE");
-        ModoDeJogo = teclado.nextInt();
-        while (a) {
-            switch (ModoDeJogo) {
-                case 1: //seleciona o pvp
-                    a = false;
-                    break;
-                case 2:   // seleciona o pve
-                    a = false;
-                    break;
-                default:
-                    System.out.println("Selecione um modo de jogo válido");
-            }
-        }
+
+    private void iniciar_jogo(){
+
     }
 
-    private static void MenuIniciar() {
-        System.out.println("Bem vindo ao Masmorras e Dragões!");
-        System.out.println("Masmorras e Dragões é um jogo de estratégia por turnos onde apenas os mais habilidosos e destemidos sobreviverão!");
-        System.out.println("Neste combate tático, dois oponentes se enfrentam em uma Arena 2D. \nExistem três tipos de classe: Arqueiro, Guerreiro e Mago.");
+
+    public static void geraPosicaoInicial(Personagem  player_1, Personagem player_2){
+        Random random = new Random();
+        EscolheValoresPosicao(random, player_1);
+        EscolheValoresPosicao(random, player_2);
     }
+
+    private static void EscolheValoresPosicao(Random random, Personagem player) {
+        int posicao_x = random.nextInt(10);
+        int posicao_y = random.nextInt(10);
+        player.linha = posicao_x;
+        player.coluna = posicao_y;
+    }
+
 }

@@ -1,10 +1,10 @@
 package trabalho.duelodepersonagens;
-
-
 import java.util.Scanner;
+
 
 public abstract class Personagem {
     protected String nome;
+    protected String classe;
     protected int PontosDeVida;
     protected int forcaDeAtaque;
     protected int forcaDeDefesa;
@@ -14,10 +14,11 @@ public abstract class Personagem {
     protected int coluna;
 
 
-    public Personagem(String nome, int forcaDeAtaque, int forcaDeDefesa, int AlcanceDeAtaque) { //construtor da classe personagem
+    public Personagem(String nome,String classe, int forcaDeAtaque, int forcaDeDefesa, int AlcanceDeAtaque) { //construtor da classe personagem
         this.nome = nome;
+        this.classe = classe;
         this.forcaDeAtaque = forcaDeAtaque;
-        this.forcaDeDefesa = forcaDeDefesa;
+        this.DefesaAtual = forcaDeDefesa;
         this.AlcanceDeAtaque = AlcanceDeAtaque;
         this.PontosDeVida = 100;
     }
@@ -27,44 +28,52 @@ public abstract class Personagem {
         verificaDirecional(direcional);
     }
 
-    private static Character getDirecao(Character direcional) { //método utilizado pela funcao andar
-        while(direcional != 'C' || direcional != 'c' || direcional != 'E' || direcional != 'e' || direcional != 'd' || direcional != 'D' || direcional != 'B' || direcional != 'b'){
+    private static Character getDirecao(Character direcional) { //metodo para movimentação do jogador
+        while(direcional != 'C' && direcional != 'c' && direcional != 'E' && direcional != 'e' && direcional != 'd' && direcional != 'D' && direcional != 'B' && direcional != 'b'){
             System.out.println("Opção inválida! \n Por favor, digite um direcional válido.");
             Scanner verificaDirecional = new Scanner(System.in);
             direcional = verificaDirecional.nextLine().charAt(0);
         }
         return direcional;
     }
+
     private void verificaDirecional(Character direcional) {
 
         if(direcional == 'C' || direcional == 'c') {
-            while((this.coluna + 1) > 9){
+            while((this.linha - 1) < 0){
                 Scanner teclado = new Scanner(System.in);
-                System.out.println("Não é possível se mover nessa direção, por favor tente outra!");
+                System.out.println("Não é possível se mover nessa direção!");
                 direcional = teclado.nextLine().charAt(0);
             }
-             this.coluna += 1;
+             this.linha --;
         }
 
         else if(direcional == 'E' || direcional == 'e') {
+            while(this.coluna - 1 < 0){
+                Scanner teclado = new Scanner(System.in);
+                System.out.println("Não é possível se mover nessa direção!");
+                direcional = teclado.nextLine().charAt(0);
+            }
+            this.coluna --;
+        }
 
-            this.linha--;
-        }
         else if(direcional == 'D' || direcional == 'd') {
-            this.linha++;
+            while((this.coluna + 1) > 9){
+                Scanner teclado = new Scanner(System.in);
+                System.out.println("Não é possível se mover nessa direção!");
+                direcional = teclado.nextLine().charAt(0);
+            }
+            this.coluna++;
         }
+
         else if(direcional == 'B' || direcional == 'b') {
-            while((this.coluna - 1) < 0){
+            while((this.linha + 1) > 9){
                 Scanner teclado = new Scanner(System.in);
                 System.out.println("Não é possível se mover nessa direção, por favor tente outra!");
                 direcional = teclado.nextLine().charAt(0);
             }
-            this.coluna -= 1;
+            this.linha ++;
         }
-
-
-
-
     }
 
 
@@ -75,15 +84,34 @@ public abstract class Personagem {
 
 
     public void atacar(Personagem Inimigo){
-        if(EstaNoAlcance(Inimigo)){
+        if(EstaNoAlcance(Inimigo)){ //max(0, forcaDeAtaque doatacante - forcaDeDefesa do alvo).
+            int dano = Math.max(0, this.forcaDeAtaque - Inimigo.DefesaAtual);
+
+            if(dano >0){
+                Inimigo.PontosDeVida -= dano;
+                System.out.println("O ataque foi bem sucedido!!");
+                System.out.println("O "+ this.classe +" desfere seu golpe e causa "+ dano + "de dano no "+ Inimigo.classe + Inimigo.nome+"!");
+            }
+            else{
+                System.out.println("Ataque mal-sucedido! A defesa de "+ Inimigo.nome+ " bloqueou completamente o ataque!");
+            }
+
+            Inimigo.DefesaAtual  = Math.max(0, Inimigo.DefesaAtual - this.forcaDeAtaque);
+        }
+        else{
+            System.out.println("ERROU! O alvo estava fora do alcance!");
 
         }
     }
 
-    public void Defender(String nome){
-        DefesaAtual = forcaDeDefesa;
+    public void Defender(){
+        this.DefesaAtual = this.forcaDeDefesa;
+        System.out.println("O "+classe +" " +nome +" se defendeu! Sua defesa foi restaurada para " + DefesaAtual + "!");
     }
 
+    public boolean esta_vivo(){
+        return this.PontosDeVida>0;
+    }
     public abstract void AtivarPoderEspecial(Personagem Inimigo);
 
 }
