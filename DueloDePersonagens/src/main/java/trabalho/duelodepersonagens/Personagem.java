@@ -23,9 +23,9 @@ public abstract class Personagem {
         this.PontosDeVida = 100;
     }
 
-    public void Andar(Character direcional){ // utiliza C/B/E/D como os direicionais para movimentar o jogador no tabuleiro
+    public boolean Andar(Character direcional){ // utiliza C/B/E/D como os direicionais para movimentar o jogador no tabuleiro
         direcional = getDirecao(direcional);
-        verificaDirecional(direcional);
+        return verificaDirecional(direcional);
     }
 
     private static Character getDirecao(Character direcional) { //metodo para movimentação do jogador
@@ -37,43 +37,33 @@ public abstract class Personagem {
         return direcional;
     }
 
-    private void verificaDirecional(Character direcional) {
+    private boolean verificaDirecional(Character direcional) {
 
-        if(direcional == 'C' || direcional == 'c') {
-            while((this.linha - 1) < 0){
-                Scanner teclado = new Scanner(System.in);
-                System.out.println("Não é possível se mover nessa direção!");
-                direcional = teclado.nextLine().charAt(0);
+        if (direcional == 'C' || direcional == 'c') {
+            if ((this.linha - 1) < 0) {
+                return false;
             }
-             this.linha --;
+            this.linha--;
         }
-
-        else if(direcional == 'E' || direcional == 'e') {
-            while(this.coluna - 1 < 0){
-                Scanner teclado = new Scanner(System.in);
-                System.out.println("Não é possível se mover nessa direção!");
-                direcional = teclado.nextLine().charAt(0);
+        else if (direcional == 'E' || direcional == 'e') {
+            if (this.coluna - 1 < 0) {
+                return false;
             }
-            this.coluna --;
+            this.coluna--;
         }
-
-        else if(direcional == 'D' || direcional == 'd') {
-            while((this.coluna + 1) > 9){
-                Scanner teclado = new Scanner(System.in);
-                System.out.println("Não é possível se mover nessa direção!");
-                direcional = teclado.nextLine().charAt(0);
+        else if (direcional == 'D' || direcional == 'd') {
+            if ((this.coluna + 1) > 9) {
+                return false;
             }
             this.coluna++;
         }
-
-        else if(direcional == 'B' || direcional == 'b') {
-            while((this.linha + 1) > 9){
-                Scanner teclado = new Scanner(System.in);
-                System.out.println("Não é possível se mover nessa direção, por favor tente outra!");
-                direcional = teclado.nextLine().charAt(0);
+        else if (direcional == 'B' || direcional == 'b') {
+            if ((this.linha + 1) > 9) {
+                return false;
             }
-            this.linha ++;
+            this.linha++;
         }
+        return true;
     }
 
 

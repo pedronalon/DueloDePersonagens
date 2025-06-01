@@ -44,6 +44,9 @@ public class Menus {
             System.out.println();
         }
     }
+    public void AtualizarArena(){
+        //tem q implementar isso aq ainda...
+    }
 
     public void ImprimeDados(Personagem Player){
         System.out.println("O jogador "+ Player.nome+ "eh um "+ Player.classe +". Atributos:");
@@ -157,6 +160,10 @@ public class Menus {
             // %s é para puxar a string
             // -25 é para alinhar à esquerda, 25 caracteres
         }
+    }
+
+    public boolean isEhPVE() {
+    return ehPVE;
     }
 }
 
