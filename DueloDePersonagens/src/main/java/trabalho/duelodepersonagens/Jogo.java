@@ -1,5 +1,6 @@
 package trabalho.duelodepersonagens;
 
+import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -8,14 +9,14 @@ public class Jogo {
     private Personagem Player_2;
     private boolean ehPVE;
     private Scanner teclado;
+    private Menus menu;
 
     public Jogo() {
         teclado = new Scanner(System.in);
-        Menus menu = new Menus();
+        menu = new Menus();
         this.Player_1 = menu.getPlayer_1();
         this.Player_2 = menu.getPlayer_2();
         this.ehPVE = menu.isEhPVE();
-        menu.ImprimeDados(Player_1);
         geraPosicaoInicial(Player_1, Player_2);
         iniciar_jogo();
     }
@@ -25,12 +26,12 @@ public class Jogo {
 
         while (Player_1.esta_vivo() && Player_2.esta_vivo()) {
             if (turnoPlayer1) {
-                turnoJogador(Player_1, Player_2);
+                turnoJogador(Player_1, Player_2, turnoPlayer1);
             } else {
                 if (ehPVE) {
                     turnoBot(Player_2, Player_1);
-                } else {
-                    turnoJogador(Player_2, Player_1);
+                } else  {
+                    turnoJogador(Player_2, Player_1, turnoPlayer1);
                 }
             }
             turnoPlayer1 = !turnoPlayer1;
@@ -44,11 +45,18 @@ public class Jogo {
         }
     }
 
-    private void turnoJogador(Personagem jogador, Personagem inimigo) {
+    private void turnoJogador(Personagem jogador, Personagem inimigo, boolean turnoPlayer1) {
         System.out.println("\n--- Turno de " + jogador.nome + " ---");
         System.out.println("PV: " + jogador.PontosDeVida + " | Defesa: " + jogador.DefesaAtual);
         System.out.println("Posição: [" + jogador.linha + "," + jogador.coluna + "]");
-        System.out.println("Inimigo posição: [" + inimigo.linha + "," + inimigo.coluna + "]");
+        System.out.println("Posição do inimigo: [" + inimigo.linha + "," + inimigo.coluna + "]");
+
+        if(turnoPlayer1) {
+            menu.AtualizarArena(jogador, inimigo);
+        }
+        else{
+            menu.AtualizarArena(inimigo, jogador);
+        }
 
         System.out.println("\nEscolha sua ação:");
         System.out.println("1 - Mover");
@@ -85,9 +93,11 @@ public class Jogo {
         System.out.println("PV: " + bot.PontosDeVida + " | Defesa: " + bot.DefesaAtual);
         System.out.println("Posição: [" + bot.linha + "," + bot.coluna + "]");
         System.out.println("Jogador posição: [" + jogador.linha + "," + jogador.coluna + "]");
+        menu.AtualizarArena(jogador, bot);
 
         Random random = new Random();
         int acao;
+
 
         // Lógica simples para o bot
         if (bot.EstaNoAlcance(jogador)) {

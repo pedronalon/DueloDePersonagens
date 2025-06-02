@@ -19,6 +19,7 @@ public abstract class Personagem {
         this.classe = classe;
         this.forcaDeAtaque = forcaDeAtaque;
         this.DefesaAtual = forcaDeDefesa;
+        this.forcaDeDefesa = forcaDeDefesa;
         this.AlcanceDeAtaque = AlcanceDeAtaque;
         this.PontosDeVida = 100;
     }
@@ -80,7 +81,7 @@ public abstract class Personagem {
             if(dano >0){
                 Inimigo.PontosDeVida -= dano;
                 System.out.println("O ataque foi bem sucedido!!");
-                System.out.println("O "+ this.classe +" desfere seu golpe e causa "+ dano + "de dano no "+ Inimigo.classe + Inimigo.nome+"!");
+                System.out.println("O "+ this.classe +" desfere seu golpe e causa "+ dano + " de dano no "+ Inimigo.classe +" "+ Inimigo.nome+"!");
             }
             else{
                 System.out.println("Ataque mal-sucedido! A defesa de "+ Inimigo.nome+ " bloqueou completamente o ataque!");

@@ -8,7 +8,7 @@ public class Arqueiro extends Personagem {
     @Override
     public void AtivarPoderEspecial(Personagem inimigo){
         this.AlcanceDeAtaque += 1;
-        System.out.println("FLECHA PRECISA! Arqueiro "+ nome + "incrementa permanentemente 1 em seu alcance de ataque!!");
+        System.out.println("FLECHA PRECISA! Arqueiro "+ nome + " incrementa permanentemente 1 em seu alcance de ataque!!");
     }
 
 

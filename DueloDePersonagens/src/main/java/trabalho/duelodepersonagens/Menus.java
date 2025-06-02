@@ -5,14 +5,14 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Menus {
-    private String[][] arena;
+    private String[][] arena = new String[10][10];
     private Personagem Player_1;
     private Personagem Player_2;
     private boolean ehPVE;
 
 
     public Menus(){
-        CriarArena();
+        InicializaArena();
         MenuInicial();
         Seleciona_Modo();
         Personaliza_Personagem();
@@ -27,11 +27,11 @@ public class Menus {
         return Player_2;
     }
 
-    public void CriarArena(){
-            arena = new String [10][10];   //...Cria uma matriz de strings 10x10, inicializada por "[ ]"em cada string.
+    public void InicializaArena(){
+        //...preenche a matriz de strings 10x10 com "[  ]" em cada string.
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < 10; j++){
-                arena[j][i] = "[ ]";
+                arena[j][i] = "[  ]";
             }
         }
     }
@@ -44,12 +44,17 @@ public class Menus {
             System.out.println();
         }
     }
-    public void AtualizarArena(){
-        //tem q implementar isso aq ainda...
+
+
+    public void AtualizarArena(Personagem Player_1, Personagem Player_2){
+        arena[Player_1.linha][Player_1.coluna] = ("[P1]");
+        arena[Player_2.linha][Player_2.coluna] = ("[P2]");
+        ImprimeArena();
+        InicializaArena();
     }
 
     public void ImprimeDados(Personagem Player){
-        System.out.println("O jogador "+ Player.nome+ "eh um "+ Player.classe +". Atributos:");
+        System.out.println("O jogador "+ Player.nome+ " eh um "+ Player.classe +". Atributos:");
         System.out.println("Pontos de vida: "+ Player.PontosDeVida);
         System.out.println("Dano de ataque: "+ Player.forcaDeAtaque);
         System.out.println("Defesa atual: "+Player.DefesaAtual);
