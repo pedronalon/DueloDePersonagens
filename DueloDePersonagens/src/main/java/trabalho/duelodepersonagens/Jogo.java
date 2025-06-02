@@ -63,9 +63,10 @@ public class Jogo {
         System.out.println("2 - Atacar");
         System.out.println("3 - Defender");
         System.out.println("4 - Poder Especial");
+        System.out.println("5 - Desistir do jogo");
 
         int acao = teclado.nextInt();
-        while (acao < 1 || acao > 4) {
+        while (acao < 1 || acao > 5) {
             System.out.println("Opção inválida! Escolha novamente:");
             acao = teclado.nextInt();
         }
@@ -85,6 +86,10 @@ public class Jogo {
             case 4:
                 jogador.AtivarPoderEspecial(inimigo);
                 break;
+
+            case 5:
+                jogador.PontosDeVida = 0;
+
         }
     }
 
