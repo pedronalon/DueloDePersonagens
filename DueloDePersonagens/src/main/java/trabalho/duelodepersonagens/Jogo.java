@@ -1,5 +1,6 @@
 package trabalho.duelodepersonagens;
 
+
 import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,27 +11,32 @@ public class Jogo {
     private boolean ehPVE;
     private Scanner teclado;
     private Menus menu;
+    public boolean jogarNovamente;
+    private Random random;
+    private Actions p1_action, p2_action;
 
     public Jogo() {
-        teclado = new Scanner(System.in);
-        menu = new Menus();
+        this.teclado = new Scanner(System.in);
+        this.menu = new Menus();
+        this.random = new Random();
         this.Player_1 = menu.getPlayer_1();
         this.Player_2 = menu.getPlayer_2();
         this.ehPVE = menu.isEhPVE();
         geraPosicaoInicial(Player_1, Player_2);
-        iniciar_jogo();
+        p1_action = new Actions(Player_1);
+        p2_action = new Actions(Player_2);
     }
 
-    private void iniciar_jogo() {
+    public void iniciar_jogo() {
         boolean turnoPlayer1 = true;
 
-        while (Player_1.esta_vivo() && Player_2.esta_vivo()) {
+        while (p1_action.esta_vivo() && p2_action.esta_vivo()) {
             if (turnoPlayer1) {
                 turnoJogador(Player_1, Player_2, turnoPlayer1);
             } else {
                 if (ehPVE) {
                     turnoBot(Player_2, Player_1);
-                } else  {
+                } else {
                     turnoJogador(Player_2, Player_1, turnoPlayer1);
                 }
             }
@@ -38,7 +44,7 @@ public class Jogo {
         }
 
         // Verifica o vencedor
-        if (Player_1.esta_vivo()) {
+        if (p1_action.esta_vivo()) {
             System.out.println(Player_1.nome + " venceu o duelo!");
         } else {
             System.out.println(Player_2.nome + " venceu o duelo!");
@@ -51,50 +57,18 @@ public class Jogo {
         System.out.println("Posição: [" + jogador.linha + "," + jogador.coluna + "]");
         System.out.println("Posição do inimigo: [" + inimigo.linha + "," + inimigo.coluna + "]");
 
-        if(turnoPlayer1) {
+        if (turnoPlayer1) {
             menu.AtualizarArena(jogador, inimigo);
-        }
-        else{
+        } else {
             menu.AtualizarArena(inimigo, jogador);
         }
 
-        System.out.println("\nEscolha sua ação:");
-        System.out.println("1 - Mover");
-        System.out.println("2 - Atacar");
-        System.out.println("3 - Defender");
-        System.out.println("4 - Poder Especial");
-        System.out.println("5 - Desistir do jogo");
-
-        int acao = teclado.nextInt();
-        while (acao < 1 || acao > 5) {
-            System.out.println("Opção inválida! Escolha novamente:");
-            acao = teclado.nextInt();
-        }
-
-        switch (acao) {
-            case 1:
-                System.out.println("Digite a direção (C - Cima, B - Baixo, E - Esquerda, D - Direita):");
-                char direcao = teclado.next().charAt(0);
-                jogador.Andar(direcao);
-                break;
-            case 2:
-                jogador.atacar(inimigo);
-                break;
-            case 3:
-                jogador.Defender();
-                break;
-            case 4:
-                jogador.AtivarPoderEspecial(inimigo);
-                break;
-
-            case 5:
-                jogador.PontosDeVida = 0;
-
-        }
+        menu.Menu_de_Combate(jogador, inimigo);
     }
 
     private void turnoBot(Personagem bot, Personagem jogador) {
         System.out.println("\n--- Turno do BOT " + bot.nome + " ---");
+        Actions bot_action = new Actions(bot);
         System.out.println("PV: " + bot.PontosDeVida + " | Defesa: " + bot.DefesaAtual);
         System.out.println("Posição: [" + bot.linha + "," + bot.coluna + "]");
         System.out.println("Jogador posição: [" + jogador.linha + "," + jogador.coluna + "]");
@@ -103,9 +77,8 @@ public class Jogo {
         Random random = new Random();
         int acao;
 
-
         // Lógica simples para o bot
-        if (bot.EstaNoAlcance(jogador)) {
+        if (bot_action.EstaNoAlcance(jogador)) {
             // Se está no alcance, 70% de chance de atacar, 20% de defender, 10% de usar poder especial
             int chance = random.nextInt(100);
             if (chance < 70) {
@@ -133,11 +106,11 @@ public class Jogo {
                 moverBotParaJogador(bot, jogador);
                 break;
             case 2: // Atacar
-                bot.atacar(jogador);
+                bot_action.atacar(jogador);
                 System.out.println("O BOT atacou!");
                 break;
             case 3: // Defender
-                bot.Defender();
+                bot_action.Defender();
                 System.out.println("O BOT se defendeu!");
                 break;
             case 4: // Poder especial
@@ -151,38 +124,68 @@ public class Jogo {
         int deltaX = jogador.linha - bot.linha;
         int deltaY = jogador.coluna - bot.coluna;
 
+        Actions bot_action = new Actions(bot);
         char[] direcoesPrioritarias = new char[2];
 
         // Define as direções prioritárias baseadas na maior diferença
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            direcoesPrioritarias[0] = deltaX > 0 ? 'B' : 'C';
-            direcoesPrioritarias[1] = deltaY > 0 ? 'D' : 'E';
+            // Tenta mover verticalmente primeiro
+            if (deltaX > 0) {
+                if (bot_action.Andar('B')) {
+                    System.out.println("O BOT moveu para Baixo");
+                    return;
+                }
+            } else {
+                if (bot_action.Andar('C')) {
+                    System.out.println("O BOT moveu para Cima");
+                    return;
+                }
+            }
+
+            // Se não conseguiu mover verticalmente, tenta horizontal
+            if (deltaY > 0) {
+                if (bot_action.Andar('D')) {
+                    System.out.println("O BOT moveu para Direita");
+                    return;
+                }
+            } else {
+                if (bot_action.Andar('E')) {
+                    System.out.println("O BOT moveu para Esquerda");
+                    return;
+                }
+            }
         } else {
-            direcoesPrioritarias[0] = deltaY > 0 ? 'D' : 'E';
-            direcoesPrioritarias[1] = deltaX > 0 ? 'B' : 'C';
-        }
+            // Tenta mover horizontalmente primeiro
+            if (deltaY > 0) {
+                if (bot_action.Andar('D')) {
+                    System.out.println("O BOT moveu para Direita");
+                    return;
+                }
+            } else {
+                if (bot_action.Andar('E')) {
+                    System.out.println("O BOT moveu para Esquerda");
+                    return;
+                }
+            }
 
-        // Tenta as direções prioritárias
-        for (char direcao : direcoesPrioritarias) {
-            if (bot.Andar(direcao)) {
-                System.out.println("O BOT se moveu para " + direcao);
-                return;
+            // Se não conseguiu mover horizontalmente, tenta vertical
+            if (deltaX > 0) {
+                if (bot_action.Andar('B')) {
+                    System.out.println("O BOT moveu para Baixo");
+                    return;
+                }
+            } else {
+                if (bot_action.Andar('C')) {
+                    System.out.println("O BOT moveu para Cima");
+                    return;
+                }
             }
         }
 
-        // Se não conseguiu com as prioritárias, tenta outras direções aleatórias
-        char[] todasDirecoes = {'C', 'B', 'E', 'D'};
-        for (char direcao : todasDirecoes) {
-            if (bot.Andar(direcao)) {
-                System.out.println("O BOT se moveu para " + direcao);
-                return;
-            }
-        }
-
-        System.out.println("O BOT tentou se mover mas não conseguiu");
+        System.out.println("O BOT não conseguiu se mover!");
     }
 
-    public static void geraPosicaoInicial(Personagem player_1, Personagem player_2) {
+    public void geraPosicaoInicial(Personagem player_1, Personagem player_2) {
         Random random = new Random();
         EscolheValoresPosicao(random, player_1);
 

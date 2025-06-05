@@ -16,7 +16,7 @@ public class Menus {
         MenuInicial();
         Seleciona_Modo();
         Personaliza_Personagem();
-        Jogo.geraPosicaoInicial(Player_1, Player_2);
+        //Jogo.geraPosicaoInicial(Player_1, Player_2);
     }
 
     public Personagem getPlayer_1() {
@@ -91,7 +91,7 @@ public class Menus {
     }
 
     private Personagem getInfo(int num){
-        if(num == 1 || !ehPVE){     // dupla verificação para que não sejam criados dois bots.
+        if(num == 1 || !ehPVE){     // dupla verificação para não serem criados dois bots.
                                     //caso o modo de jogo escolhido seja PvP
 
             Scanner teclado = new Scanner(System.in);
@@ -131,7 +131,44 @@ public class Menus {
     }
 
 
-    private static void Menu_de_Combate(){}
+    public void Menu_de_Combate(Personagem jogador, Personagem inimigo) {
+        Actions jogador_action = new Actions(jogador);
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("\nEscolha sua ação:");
+        System.out.println("1 - Mover");
+        System.out.println("2 - Atacar");
+        System.out.println("3 - Defender");
+        System.out.println("4 - Poder Especial");
+        System.out.println("5 - Desistir do jogo");
+
+        int acao = teclado.nextInt();
+        while (acao < 1 || acao > 5) {
+            System.out.println("Opção inválida! Escolha novamente:");
+            acao = teclado.nextInt();
+        }
+
+        switch (acao) {
+            case 1:
+                System.out.println("Digite a direção (C - Cima, B - Baixo, E - Esquerda, D - Direita):");
+                char direcao = teclado.next().charAt(0);
+                jogador_action.Andar(direcao);
+                break;
+            case 2:
+                jogador_action.atacar(inimigo);
+                break;
+            case 3:
+                jogador_action.Defender();
+                break;
+            case 4:
+                jogador.AtivarPoderEspecial(inimigo);
+                break;
+
+            case 5:
+                jogador.PontosDeVida = 0;
+
+        }
+    }
+
     // ta foda, ainda n fiz
 
 
@@ -168,7 +205,7 @@ public class Menus {
     }
 
     public boolean isEhPVE() {
-    return ehPVE;
+        return ehPVE;
     }
 }
 
