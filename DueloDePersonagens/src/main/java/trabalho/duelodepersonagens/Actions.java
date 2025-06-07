@@ -4,35 +4,27 @@ import java.util.Scanner;
 
 public class Actions {
 
-    private Personagem personagem;
-    private int linha;
-    private int coluna;
+    private final Personagem personagem;
 
     public Actions(Personagem personagem){
         this.personagem = personagem;
-        this.linha = personagem.getLinha();
-        this.coluna = personagem.getColuna();
     }
 
     public boolean Andar(Character direcional){ // utiliza C/B/E/D como os direicionais para movimentar o jogador no tabuleiro
         direcional = getDirecao(direcional);
-        if(verificaDirecional(direcional)){
-            personagem.linha = this.linha;
-            personagem.coluna = this.coluna;
-            return true;
-        }
-    return false;
+        return (verificaDirecional(direcional));
+
     }
 
 
-    private static Character getDirecao(Character direcional) { //metodo para movimentação do jogador
-          while(direcional != 'C' && direcional != 'c' &&
-                direcional != 'E' && direcional != 'e' &&
-                direcional != 'd' && direcional != 'D' &&
-                direcional != 'B' && direcional != 'b'){
+    private static Character getDirecao(Character direcional) { //Metodo para movimentação do jogador
+
+        direcional = Character.toUpperCase(direcional);
+          while(direcional != 'C' && direcional != 'E' && direcional != 'D' && direcional != 'B' ){
             System.out.println("Opção inválida! \n Por favor, digite um direcional válido.");
             Scanner verificaDirecional = new Scanner(System.in);
             direcional = verificaDirecional.nextLine().charAt(0);
+            direcional = Character.toUpperCase(direcional);
         }
         return direcional;
     }
@@ -43,20 +35,24 @@ public class Actions {
 
         switch(direcional) {
             case 'C':
-                if ((this.linha - 1) < 0) return false;
-                this.linha--;
+                if ((personagem.getLinha() - 1) < 0)
+                    return false;
+                personagem.setLinha(personagem.getLinha() - 1);
                 break;
             case 'E':
-                if (this.coluna - 1 < 0) return false;
-                this.coluna--;
+                if (personagem.getColuna() - 1 < 0)
+                    return false;
+                personagem.setColuna(personagem.getColuna() - 1);
                 break;
             case 'D':
-                if ((this.coluna + 1) > 9) return false;
-                this.coluna++;
+                if ((personagem.getColuna() + 1) > 9)
+                    return false;
+                personagem.setColuna(personagem.getColuna() + 1);
                 break;
             case 'B':
-                if ((this.linha + 1) > 9) return false;
-                this.linha++;
+                if ((personagem.getLinha() + 1) > 9)
+                    return false;
+                personagem.setLinha(personagem.getLinha() + 1);
                 break;
         }
         return true;
@@ -65,18 +61,18 @@ public class Actions {
 
     public void atacar(Personagem Inimigo){
         if(EstaNoAlcance(Inimigo)){ //max(0, forcaDeAtaque do atacante - forcaDeDefesa do alvo).
-            int dano = Math.max(0, personagem.forcaDeAtaque - Inimigo.DefesaAtual);
+            int dano = Math.max(0, personagem.getForcaDeAtaque() - Inimigo.getDefesaAtual());
 
-            if(dano >0){
-                Inimigo.PontosDeVida -= dano;
+            if(dano > 0){
+                Inimigo.setPontosDeVida(Inimigo.getPontosDeVida() - dano);
                 System.out.println("O ataque foi bem sucedido!!");
-                System.out.println("O "+ personagem.getClasse() +" desfere seu golpe e causa "+ dano + " de dano no "+ Inimigo.classe +" "+ Inimigo.nome+"!");
+                System.out.println("O "+ personagem.getClasse() +" "+personagem.getNome()+" desfere seu golpe e causa "+ dano + " de dano no "+ Inimigo.getClasse() +" "+ Inimigo.getNome()+"!");
             }
             else{
-                System.out.println("Ataque mal-sucedido! A defesa de "+ Inimigo.nome+ " bloqueou completamente o ataque!");
+                System.out.println("Ataque mal-sucedido! A defesa de "+ Inimigo.getNome()+ " bloqueou completamente o ataque!");
             }
 
-            Inimigo.DefesaAtual  = Math.max(0, Inimigo.DefesaAtual - personagem.forcaDeAtaque);
+            Inimigo.setDefesaAtual(Math.max(0, Inimigo.getDefesaAtual() - personagem.getForcaDeAtaque()));
         }
         else{
             System.out.println("ERROU! O alvo estava fora do alcance!");
@@ -85,18 +81,15 @@ public class Actions {
     }
 
     public void Defender(){
-        personagem.DefesaAtual = personagem.forcaDeDefesa;
-        System.out.println("O "+personagem.getClasse() +" " +personagem.getNome() +" se defendeu! Sua defesa foi restaurada para " + personagem.DefesaAtual + "!");
-    }
-
-    public boolean esta_vivo(){
-        return personagem.PontosDeVida>0;
+        personagem.setDefesaAtual(personagem.getForcaDeDefesa());
+        System.out.println("O "+personagem.getClasse() +" " +personagem.getNome() +" se defendeu! Sua defesa foi restaurada para " + personagem.getDefesaAtual() + "!");
     }
 
 
-    public boolean EstaNoAlcance(Personagem inimigo){ //calcula a distancia entre os dois personagens utilizando a Distância de Chebyshev
-        int Distancia = Math.max(Math.abs(this.linha - inimigo.linha), Math.abs(this.coluna - inimigo.coluna));
-        return Distancia <= personagem.AlcanceDeAtaque;
+
+    public boolean EstaNoAlcance(Personagem inimigo){ //calcula a distância entre os dois personagens utilizando a Distância de Chebyshev
+        int Distancia = Math.max(Math.abs(personagem.getLinha() - inimigo.getLinha()), Math.abs(personagem.getColuna() - inimigo.getColuna()));
+        return Distancia <= personagem.getAlcanceDeAtaque();
     }
 
 }

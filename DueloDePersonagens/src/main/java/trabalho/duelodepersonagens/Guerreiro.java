@@ -7,8 +7,8 @@ public class Guerreiro extends Personagem {
 
     @Override
         public void AtivarPoderEspecial(Personagem inimigo){
-            this.forcaDeAtaque = 30;
-            System.out.println("CARGA BRUTAL! Guerreiro "+ nome+ " aumenta temporariamnte seu ataque para 30!!");
+            setForcaDeAtaque(30);
+            System.out.println("CARGA BRUTAL! Guerreiro "+ getNome()+ " aumenta permanentemente seu ataque para 30!!");
     }
 
 

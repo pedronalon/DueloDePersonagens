@@ -7,10 +7,10 @@ public class Mago extends Personagem {
 
     @Override
     public void AtivarPoderEspecial(Personagem inimigo){
-        int temp = this.PontosDeVida;
-        this.PontosDeVida = inimigo.PontosDeVida;
-        inimigo.PontosDeVida = temp;
-        System.out.println("TROCAR VIDA! O mago "+ nome +" troca os seus pontos de vida com seu adversário!!");
+        int temp = this.getPontosDeVida();
+        this.setPontosDeVida(inimigo.getPontosDeVida());;
+        inimigo.setPontosDeVida(temp);
+        System.out.println("TROCAR VIDA! O mago "+ getNome() +" troca os seus pontos de vida com seu adversário!!");
     }
 
 }

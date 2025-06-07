@@ -11,11 +11,11 @@ public class Menus {
     private boolean ehPVE;
 
 
-    public Menus(){
+    public Menus(Scanner teclado){
         InicializaArena();
         MenuInicial();
-        Seleciona_Modo();
-        Personaliza_Personagem();
+        Seleciona_Modo(teclado);
+        Personaliza_Personagem(teclado);
         //Jogo.geraPosicaoInicial(Player_1, Player_2);
     }
 
@@ -36,6 +36,7 @@ public class Menus {
         }
     }
 
+    //metodo que imprime a arena
     public void ImprimeArena(){
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < 10; j++){
@@ -45,21 +46,38 @@ public class Menus {
         }
     }
 
-
+    // Metodo que atualiza a arena com a posição atual dos jogadores
+    // Antes de posicionar os jogadores no mapa, limpa a arena, para não haver sobreposição de posições
     public void AtualizarArena(Personagem Player_1, Personagem Player_2){
-        arena[Player_1.linha][Player_1.coluna] = ("[P1]");
-        arena[Player_2.linha][Player_2.coluna] = ("[P2]");
-        ImprimeArena();
         InicializaArena();
+        arena[Player_1.getLinha()][Player_1.getColuna()] = ("[P1]");
+        arena[Player_2.getLinha()][Player_2.getColuna()] = ("[P2]");
+        ImprimeArena();
     }
 
-    public void ImprimeDados(Personagem Player){
-        System.out.println("O jogador "+ Player.nome+ " eh um "+ Player.classe +". Atributos:");
-        System.out.println("Pontos de vida: "+ Player.PontosDeVida);
-        System.out.println("Dano de ataque: "+ Player.forcaDeAtaque);
-        System.out.println("Defesa atual: "+Player.DefesaAtual);
-        System.out.println("Alcance: " + Player.AlcanceDeAtaque);
-        System.out.println("Posicao: ["+Player.linha +"], ["+Player.coluna +"]" );
+    //metodo que imprime todos os dados do jogador, utilizando os métodos get para cada atributo
+    public void ImprimeDados(Personagem jogador, Personagem inimigo){
+        String[] DadosJogador = {
+                "Status jogador 1: ",
+                "   Pontos de vida: "+ jogador.getPontosDeVida(),
+                "   Dano de ataque: "+ jogador.getForcaDeAtaque(),
+                "   Defesa Atual: "+ jogador.getDefesaAtual(),
+                "   Alcance: "+ jogador.getAlcanceDeAtaque(),
+                "   Posicao: ["+jogador.getLinha() +"], ["+jogador.getColuna() +"]"
+        };
+
+        String[] DadosInimigo = {
+                "Status jogador 2: ",
+                "   Pontos de vida: "+ inimigo.getPontosDeVida(),
+                "   Dano de ataque: "+ inimigo.getForcaDeAtaque(),
+                "   Defesa Atual: "+ inimigo.getDefesaAtual(),
+                "   Alcance: "+ inimigo.getAlcanceDeAtaque(),
+                "   Posicao: ["+inimigo.getLinha() +"], ["+inimigo.getColuna() +"]"
+        };
+
+        for(int i = 0; i < 6; i++)
+            System.out.printf("%-40s %-40s\n", DadosJogador[i], DadosInimigo[i]);
+
     }
 
     private void MenuInicial() {
@@ -68,33 +86,31 @@ public class Menus {
         System.out.println("Neste combate tático, dois oponentes se enfrentam em uma Arena 2D, travando duelos entre arqueiros, guerreiros e magos!\n");
     }
 
-    private void Seleciona_Modo() { //escolha do modo de jogo à prova de burro!
-        Scanner teclado = new Scanner(System.in);
+    private void Seleciona_Modo(Scanner teclado) { //escolha do modo de jogo (difícil de ser quebrada.);
+
         String ModoDeJogo;
         System.out.println("Por favor, selecione o modo de jogo!\n (1): PvP \n (2): PvE");
         ModoDeJogo = teclado.next();
-
 
         while (!ModoDeJogo.equals("1") && !ModoDeJogo.equals("2")) {
             System.out.println("Por favor, selecione uma opcao valida!\n (1): PvP \n (2): PvE");
             ModoDeJogo = teclado.next();
         }
 
+        teclado.nextLine();
         ehPVE = ModoDeJogo.equals("2");
 
 
     }
 
-    private void Personaliza_Personagem() {
-        Player_1 = getInfo(1);
-        Player_2 = getInfo(2);
+    private void Personaliza_Personagem(Scanner teclado) {
+        Player_1 = getInfo(1, teclado);
+        Player_2 = getInfo(2, teclado);
     }
 
-    private Personagem getInfo(int num){
-        if(num == 1 || !ehPVE){     // dupla verificação para não serem criados dois bots.
-                                    //caso o modo de jogo escolhido seja PvP
-
-            Scanner teclado = new Scanner(System.in);
+    private Personagem getInfo(int num, Scanner teclado){
+        if(num == 1 || !ehPVE){     // Dupla verificação para não serem criados dois bots.
+                                    //Caso o modo de jogo escolhido seja PvP
             System.out.println("Jogador " + num + ", digite seu nome: ");
             String nome = teclado.nextLine();
             System.out.println("Ótimo. Seja bem-vindo, " + nome + "! Agora, escolha uma classe! As opçoes são: ");
@@ -106,6 +122,7 @@ public class Menus {
                 classe = teclado.next();
             }
 
+            teclado.nextLine();
             int escolhaClasse = Integer.parseInt(classe);
             return Seleciona_Personagem(escolhaClasse, nome);
         }
@@ -121,7 +138,6 @@ public class Menus {
 
     private Personagem Seleciona_Personagem(int classe, String Nome) {
 
-        // eu tinha colocado case:1 , case:2 . a IDE sugeriu trocar pra ->
         return switch (classe) {
             case 1 -> new Guerreiro(Nome);
             case 2 -> new Mago(Nome);
@@ -131,9 +147,7 @@ public class Menus {
     }
 
 
-    public void Menu_de_Combate(Personagem jogador, Personagem inimigo) {
-        Actions jogador_action = new Actions(jogador);
-        Scanner teclado = new Scanner(System.in);
+    public int Menu_de_Combate(Personagem jogador, Personagem inimigo, Scanner teclado) {
         System.out.println("\nEscolha sua ação:");
         System.out.println("1 - Mover");
         System.out.println("2 - Atacar");
@@ -141,36 +155,14 @@ public class Menus {
         System.out.println("4 - Poder Especial");
         System.out.println("5 - Desistir do jogo");
 
-        int acao = teclado.nextInt();
-        while (acao < 1 || acao > 5) {
+        String acao = teclado.next();
+        while (!acao.equals("1")  && !acao.equals("2") && !acao.equals("3") && !acao.equals("4") && !acao.equals("5")) {
             System.out.println("Opção inválida! Escolha novamente:");
-            acao = teclado.nextInt();
+            acao = teclado.next();
         }
-
-        switch (acao) {
-            case 1:
-                System.out.println("Digite a direção (C - Cima, B - Baixo, E - Esquerda, D - Direita):");
-                char direcao = teclado.next().charAt(0);
-                jogador_action.Andar(direcao);
-                break;
-            case 2:
-                jogador_action.atacar(inimigo);
-                break;
-            case 3:
-                jogador_action.Defender();
-                break;
-            case 4:
-                jogador.AtivarPoderEspecial(inimigo);
-                break;
-
-            case 5:
-                jogador.PontosDeVida = 0;
-
-        }
+        teclado.nextLine();
+        return Integer.parseInt(acao);
     }
-
-    // ta foda, ainda n fiz
-
 
 
     private static void imprimeClasses() { //forma mais amigável ao usuário de visualizar as informações

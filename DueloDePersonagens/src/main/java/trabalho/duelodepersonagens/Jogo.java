@@ -9,15 +9,15 @@ public class Jogo {
     private Personagem Player_1;
     private Personagem Player_2;
     private boolean ehPVE;
-    private Scanner teclado;
+    private final Scanner teclado;
     private Menus menu;
     public boolean jogarNovamente;
     private Random random;
     private Actions p1_action, p2_action;
 
-    public Jogo() {
-        this.teclado = new Scanner(System.in);
-        this.menu = new Menus();
+    public Jogo(Scanner teclado) {
+        this.teclado = teclado;
+        this.menu = new Menus(teclado);
         this.random = new Random();
         this.Player_1 = menu.getPlayer_1();
         this.Player_2 = menu.getPlayer_2();
@@ -30,7 +30,7 @@ public class Jogo {
     public void iniciar_jogo() {
         boolean turnoPlayer1 = true;
 
-        while (p1_action.esta_vivo() && p2_action.esta_vivo()) {
+        while (Player_1.esta_vivo() && Player_2.esta_vivo()) {
             if (turnoPlayer1) {
                 turnoJogador(Player_1, Player_2, turnoPlayer1);
             } else {
@@ -44,34 +44,55 @@ public class Jogo {
         }
 
         // Verifica o vencedor
-        if (p1_action.esta_vivo()) {
-            System.out.println(Player_1.nome + " venceu o duelo!");
+        if (Player_1.esta_vivo()) {
+            System.out.println(Player_1.getNome() + " venceu o duelo!");
         } else {
-            System.out.println(Player_2.nome + " venceu o duelo!");
+            System.out.println(Player_2.getNome() + " venceu o duelo!");
         }
     }
 
     private void turnoJogador(Personagem jogador, Personagem inimigo, boolean turnoPlayer1) {
-        System.out.println("\n--- Turno de " + jogador.nome + " ---");
-        System.out.println("PV: " + jogador.PontosDeVida + " | Defesa: " + jogador.DefesaAtual);
-        System.out.println("Posição: [" + jogador.linha + "," + jogador.coluna + "]");
-        System.out.println("Posição do inimigo: [" + inimigo.linha + "," + inimigo.coluna + "]");
+        Actions jogador_action = new Actions(jogador);
+        System.out.println("\n--- Turno de " + jogador.getNome() + " ---");
+        menu.ImprimeDados(jogador, inimigo);
 
+        //atualiza e imprime a arena
         if (turnoPlayer1) {
             menu.AtualizarArena(jogador, inimigo);
         } else {
             menu.AtualizarArena(inimigo, jogador);
         }
 
-        menu.Menu_de_Combate(jogador, inimigo);
+        int acao = menu.Menu_de_Combate(jogador, inimigo, teclado);
+        switch (acao) {
+            case 1:
+                System.out.println("Digite a direção (C - Cima, B - Baixo, E - Esquerda, D - Direita):");
+                char direcao = teclado.next().charAt(0);
+                jogador_action.Andar(direcao);
+                break;
+            case 2:
+                jogador_action.atacar(inimigo);
+                break;
+            case 3:
+                jogador_action.Defender();
+                break;
+            case 4:
+                jogador.AtivarPoderEspecial(inimigo);
+                break;
+
+            case 5:
+                jogador.setPontosDeVida(0);
+
+        }
+
     }
 
     private void turnoBot(Personagem bot, Personagem jogador) {
-        System.out.println("\n--- Turno do BOT " + bot.nome + " ---");
+        System.out.println("\n--- Turno do BOT " + bot.getNome() + " ---");
         Actions bot_action = new Actions(bot);
-        System.out.println("PV: " + bot.PontosDeVida + " | Defesa: " + bot.DefesaAtual);
-        System.out.println("Posição: [" + bot.linha + "," + bot.coluna + "]");
-        System.out.println("Jogador posição: [" + jogador.linha + "," + jogador.coluna + "]");
+        System.out.println("PV: " + bot.getPontosDeVida() + " | Defesa: " + bot.getDefesaAtual());
+        System.out.println("Posição: [" + bot.getLinha() + "," + bot.getColuna() + "]");
+        System.out.println("Jogador posição: [" + jogador.getLinha() + "," + jogador.getColuna() + "]");
         menu.AtualizarArena(jogador, bot);
 
         Random random = new Random();
@@ -121,8 +142,8 @@ public class Jogo {
     }
 
     private void moverBotParaJogador(Personagem bot, Personagem jogador) {
-        int deltaX = jogador.linha - bot.linha;
-        int deltaY = jogador.coluna - bot.coluna;
+        int deltaX = jogador.getLinha() - bot.getLinha();
+        int deltaY = jogador.getColuna() - bot.getColuna();
 
         Actions bot_action = new Actions(bot);
         char[] direcoesPrioritarias = new char[2];
@@ -192,14 +213,14 @@ public class Jogo {
         // Garante que o player 2 não fique muito perto do player 1
         do {
             EscolheValoresPosicao(random, player_2);
-        } while (Math.abs(player_1.linha - player_2.linha) < 3 &&
-                Math.abs(player_1.coluna - player_2.coluna) < 3);
+        } while (Math.abs(player_1.getLinha() - player_2.getLinha()) < 3 &&
+                Math.abs(player_1.getColuna() - player_2.getColuna()) < 3);
     }
 
     private static void EscolheValoresPosicao(Random random, Personagem player) {
         int posicao_x = random.nextInt(10);
         int posicao_y = random.nextInt(10);
-        player.linha = posicao_x;
-        player.coluna = posicao_y;
+        player.setLinha(posicao_x);
+        player.setColuna(posicao_y);
     }
 }

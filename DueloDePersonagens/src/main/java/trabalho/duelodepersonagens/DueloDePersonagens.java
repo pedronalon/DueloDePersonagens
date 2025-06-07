@@ -15,17 +15,19 @@ public class DueloDePersonagens {
 
     public static void main(String[] args) {
         boolean jogar = true;
+        Scanner teclado = new Scanner(System.in);
         do{
-            Jogo jogo = new Jogo();
+            Jogo jogo = new Jogo(teclado);
             jogo.iniciar_jogo();
 
-            Scanner teclado = new Scanner(System.in);
-            System.out.println("Deseja jogar novamente? \n (s) para sim\n(n) para nao");
+            System.out.println("Deseja jogar novamente? \n (s) para sim\n (n) para nao");
             String resposta = teclado.next();
             resposta = resposta.toUpperCase();
             while(!resposta.equals("S") && !resposta.equals("N")){
                 System.out.println("Por favor, escolha com (s) ou (n).");
                 resposta = teclado.next();
+                resposta = resposta.toUpperCase();
+                teclado.nextLine();
             }
             jogar = resposta.equals("S");
         }while(jogar);
