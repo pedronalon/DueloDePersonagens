@@ -11,7 +11,6 @@ public class Jogo {
     private boolean ehPVE;
     private final Scanner teclado;
     private Menus menu;
-    public boolean jogarNovamente;
     private Random random;
     private Actions p1_action, p2_action;
 
@@ -67,7 +66,7 @@ public class Jogo {
         switch (acao) {
             case 1:
                 System.out.println("Digite a direção (C - Cima, B - Baixo, E - Esquerda, D - Direita):");
-                char direcao = teclado.next().charAt(0);
+                String direcao = teclado.next();
                 jogador_action.Andar(direcao);
                 break;
             case 2:
@@ -88,7 +87,7 @@ public class Jogo {
     }
 
     private void turnoBot(Personagem bot, Personagem jogador) {
-        System.out.println("\n--- Turno do BOT " + bot.getNome() + " ---");
+        System.out.println("\n--- Turno do BOT ---");
         Actions bot_action = new Actions(bot);
         System.out.println("PV: " + bot.getPontosDeVida() + " | Defesa: " + bot.getDefesaAtual());
         System.out.println("Posição: [" + bot.getLinha() + "," + bot.getColuna() + "]");
@@ -115,7 +114,9 @@ public class Jogo {
             if (chance < 60) {
                 acao = 1; // Mover
             } else if (chance < 90) {
-                acao = 3; // Defender
+                if(bot.getDefesaAtual() != bot.getForcaDeDefesa())
+                     acao = 3; // Defender
+                else acao = 4;
             } else {
                 acao = 4; // Poder especial
             }
@@ -152,12 +153,12 @@ public class Jogo {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             // Tenta mover verticalmente primeiro
             if (deltaX > 0) {
-                if (bot_action.Andar('B')) {
+                if (bot_action.Andar("B")) {
                     System.out.println("O BOT moveu para Baixo");
                     return;
                 }
             } else {
-                if (bot_action.Andar('C')) {
+                if (bot_action.Andar("C")) {
                     System.out.println("O BOT moveu para Cima");
                     return;
                 }
@@ -165,12 +166,12 @@ public class Jogo {
 
             // Se não conseguiu mover verticalmente, tenta horizontal
             if (deltaY > 0) {
-                if (bot_action.Andar('D')) {
+                if (bot_action.Andar("D")) {
                     System.out.println("O BOT moveu para Direita");
                     return;
                 }
             } else {
-                if (bot_action.Andar('E')) {
+                if (bot_action.Andar("E")) {
                     System.out.println("O BOT moveu para Esquerda");
                     return;
                 }
@@ -178,12 +179,12 @@ public class Jogo {
         } else {
             // Tenta mover horizontalmente primeiro
             if (deltaY > 0) {
-                if (bot_action.Andar('D')) {
+                if (bot_action.Andar("D")) {
                     System.out.println("O BOT moveu para Direita");
                     return;
                 }
             } else {
-                if (bot_action.Andar('E')) {
+                if (bot_action.Andar("E")) {
                     System.out.println("O BOT moveu para Esquerda");
                     return;
                 }
@@ -191,12 +192,12 @@ public class Jogo {
 
             // Se não conseguiu mover horizontalmente, tenta vertical
             if (deltaX > 0) {
-                if (bot_action.Andar('B')) {
+                if (bot_action.Andar("B")) {
                     System.out.println("O BOT moveu para Baixo");
                     return;
                 }
             } else {
-                if (bot_action.Andar('C')) {
+                if (bot_action.Andar("C")) {
                     System.out.println("O BOT moveu para Cima");
                     return;
                 }

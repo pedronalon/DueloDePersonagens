@@ -20,7 +20,7 @@ public class DueloDePersonagens {
             Jogo jogo = new Jogo(teclado);
             jogo.iniciar_jogo();
 
-            System.out.println("Deseja jogar novamente? \n (s) para sim\n (n) para nao");
+            System.out.println("Deseja jogar novamente? \n (s) para sim\n 22(n) para nao");
             String resposta = teclado.next();
             resposta = resposta.toUpperCase();
             while(!resposta.equals("S") && !resposta.equals("N")){

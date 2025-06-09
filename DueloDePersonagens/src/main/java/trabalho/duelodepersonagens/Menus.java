@@ -58,7 +58,8 @@ public class Menus {
     //metodo que imprime todos os dados do jogador, utilizando os métodos get para cada atributo
     public void ImprimeDados(Personagem jogador, Personagem inimigo){
         String[] DadosJogador = {
-                "Status jogador 1: ",
+                "Status "+ jogador.getNome()+": ",
+                "   Classe:  "+ jogador.getClasse(),
                 "   Pontos de vida: "+ jogador.getPontosDeVida(),
                 "   Dano de ataque: "+ jogador.getForcaDeAtaque(),
                 "   Defesa Atual: "+ jogador.getDefesaAtual(),
@@ -67,7 +68,8 @@ public class Menus {
         };
 
         String[] DadosInimigo = {
-                "Status jogador 2: ",
+                "Status "+ inimigo.getNome()+": ",
+                "   Classe:  "+ inimigo.getClasse(),
                 "   Pontos de vida: "+ inimigo.getPontosDeVida(),
                 "   Dano de ataque: "+ inimigo.getForcaDeAtaque(),
                 "   Defesa Atual: "+ inimigo.getDefesaAtual(),
@@ -75,7 +77,7 @@ public class Menus {
                 "   Posicao: ["+inimigo.getLinha() +"], ["+inimigo.getColuna() +"]"
         };
 
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < 7; i++)
             System.out.printf("%-40s %-40s\n", DadosJogador[i], DadosInimigo[i]);
 
     }
