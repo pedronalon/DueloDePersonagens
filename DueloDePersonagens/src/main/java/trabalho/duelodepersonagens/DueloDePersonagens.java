@@ -14,13 +14,15 @@ import java.util.Scanner;
 public class DueloDePersonagens {
 
     public static void main(String[] args) {
+
+        /// Função principal, que inicia o jogo e mantém o loop vivo.
+
         boolean jogar = true;
         Scanner teclado = new Scanner(System.in);
         do{
             Jogo jogo = new Jogo(teclado);
             jogo.iniciar_jogo();
-
-            System.out.println("Deseja jogar novamente? \n (s) para sim\n 22(n) para nao");
+            System.out.println("Deseja jogar novamente? \n (s) para sim\n (n) para nao");
             String resposta = teclado.next();
             resposta = resposta.toUpperCase();
             while(!resposta.equals("S") && !resposta.equals("N")){
@@ -31,10 +33,7 @@ public class DueloDePersonagens {
             }
             jogar = resposta.equals("S");
         }while(jogar);
-        System.out.println("obrigado por testar o jogo.");
+        System.out.println("A poeira da arena baixa... por enquanto. Volte sempre que quiser testar sua coragem!\nAdemais,");
+        System.out.println("Obrigado por dedicar seu tempo a este duelo! Espero que tenha se divertido. Desenvolvido por Heitor Coelho e Pedro Nalon.");
     }
-
-
 }
-
-

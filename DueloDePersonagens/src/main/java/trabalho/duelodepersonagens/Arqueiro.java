@@ -1,8 +1,9 @@
 package trabalho.duelodepersonagens;
 
 public class Arqueiro extends Personagem {
+    /// Classe arqueiro que herda os atributos de Personagem.
     public Arqueiro(String nome) {
-        super(nome,"Arqueiro", 8, 5, 5);
+        super(nome,"Arqueiro", 8, 5, 5, false);
     }
 
     @Override

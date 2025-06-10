@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Menus {
-    private String[][] arena = new String[10][10];
+    private final String[][] arena = new String[10][10];
     private Personagem Player_1;
     private Personagem Player_2;
     private boolean ehPVE;
@@ -16,7 +16,6 @@ public class Menus {
         MenuInicial();
         Seleciona_Modo(teclado);
         Personaliza_Personagem(teclado);
-        //Jogo.geraPosicaoInicial(Player_1, Player_2);
     }
 
     public Personagem getPlayer_1() {
@@ -28,7 +27,7 @@ public class Menus {
     }
 
     public void InicializaArena(){
-        //...preenche a matriz de strings 10x10 com "[  ]" em cada string.
+        ///...preenche a matriz de strings 10x10 com "[  ]" em cada string.
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < 10; j++){
                 arena[j][i] = "[  ]";
@@ -36,7 +35,7 @@ public class Menus {
         }
     }
 
-    //metodo que imprime a arena
+    ///Metodo que imprime a arena
     public void ImprimeArena(){
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < 10; j++){
@@ -46,8 +45,9 @@ public class Menus {
         }
     }
 
-    // Metodo que atualiza a arena com a posição atual dos jogadores
-    // Antes de posicionar os jogadores no mapa, limpa a arena, para não haver sobreposição de posições
+    /// Metodo que atualiza a arena com a posição atual dos jogadores
+    /// Antes de posicionar os jogadores no mapa, limpa a arena, para não haver sobreposição de posições
+
     public void AtualizarArena(Personagem Player_1, Personagem Player_2){
         InicializaArena();
         arena[Player_1.getLinha()][Player_1.getColuna()] = ("[P1]");
@@ -55,7 +55,7 @@ public class Menus {
         ImprimeArena();
     }
 
-    //metodo que imprime todos os dados do jogador, utilizando os métodos get para cada atributo
+    ///Metodo que imprime todos os dados do jogador, utilizando os métodos get para cada atributo
     public void ImprimeDados(Personagem jogador, Personagem inimigo){
         String[] DadosJogador = {
                 "Status "+ jogador.getNome()+": ",
@@ -64,7 +64,7 @@ public class Menus {
                 "   Dano de ataque: "+ jogador.getForcaDeAtaque(),
                 "   Defesa Atual: "+ jogador.getDefesaAtual(),
                 "   Alcance: "+ jogador.getAlcanceDeAtaque(),
-                "   Posicao: ["+jogador.getLinha() +"], ["+jogador.getColuna() +"]"
+                "   Posicao: ["+jogador.getLinha() +", "+jogador.getColuna() +"]"
         };
 
         String[] DadosInimigo = {
@@ -74,7 +74,7 @@ public class Menus {
                 "   Dano de ataque: "+ inimigo.getForcaDeAtaque(),
                 "   Defesa Atual: "+ inimigo.getDefesaAtual(),
                 "   Alcance: "+ inimigo.getAlcanceDeAtaque(),
-                "   Posicao: ["+inimigo.getLinha() +"], ["+inimigo.getColuna() +"]"
+                "   Posicao: ["+inimigo.getLinha() +", "+inimigo.getColuna() +"]"
         };
 
         for(int i = 0; i < 7; i++)
@@ -82,14 +82,15 @@ public class Menus {
 
     }
 
+    /// Mensagem inicial
     private void MenuInicial() {
         System.out.println("Bem vindo ao Masmorras e Dragões!\n");
         System.out.println("Masmorras e Dragões é um jogo de estratégia por turnos onde apenas os mais habilidosos e destemidos sobreviverão!");
         System.out.println("Neste combate tático, dois oponentes se enfrentam em uma Arena 2D, travando duelos entre arqueiros, guerreiros e magos!\n");
     }
 
-    private void Seleciona_Modo(Scanner teclado) { //escolha do modo de jogo (difícil de ser quebrada.);
-
+    /// Escolha do modo de jogo (difícil de ser quebrada.);
+    private void Seleciona_Modo(Scanner teclado) {
         String ModoDeJogo;
         System.out.println("Por favor, selecione o modo de jogo!\n (1): PvP \n (2): PvE");
         ModoDeJogo = teclado.next();
@@ -110,6 +111,7 @@ public class Menus {
         Player_2 = getInfo(2, teclado);
     }
 
+    /// Cria, conforme o modo de jogo, dois personages
     private Personagem getInfo(int num, Scanner teclado){
         if(num == 1 || !ehPVE){     // Dupla verificação para não serem criados dois bots.
                                     //Caso o modo de jogo escolhido seja PvP
@@ -132,12 +134,19 @@ public class Menus {
         else{
             // caso o modo de jogo escolhido seja PvE
             int classe_bot = new Random().nextInt(3) + 1;
-            return Seleciona_Personagem(classe_bot, "BOT");
+            String NomeBot;
+            switch (classe_bot) {
+                case 1-> NomeBot = "Ragnar";
+                case 2-> NomeBot = "Gandalf";
+                case 3-> NomeBot = "Légolas";
+                default-> NomeBot = "BOT";
+            }
+            return Seleciona_Personagem(classe_bot, NomeBot);
         }
 
     }
 
-
+    /// Cria o personagem selecionado
     private Personagem Seleciona_Personagem(int classe, String Nome) {
 
         return switch (classe) {
@@ -148,7 +157,7 @@ public class Menus {
         };
     }
 
-
+    /// Imprime as opções de ação do jogador
     public int Menu_de_Combate(Personagem jogador, Personagem inimigo, Scanner teclado) {
         System.out.println("\nEscolha sua ação:");
         System.out.println("1 - Mover");
@@ -167,6 +176,7 @@ public class Menus {
     }
 
 
+    /// Primeira impressão das classes, para escolha do jogador
     private static void imprimeClasses() { //forma mais amigável ao usuário de visualizar as informações
         String[] guerreiro = {
                 "(1) Guerreiro:",
@@ -198,6 +208,7 @@ public class Menus {
         }
     }
 
+    /// Retorna a informação de que o jogo é pvp ou pve
     public boolean isEhPVE() {
         return ehPVE;
     }
