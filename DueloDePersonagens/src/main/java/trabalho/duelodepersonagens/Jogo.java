@@ -28,7 +28,7 @@ public class Jogo {
 
     /// Laço principal do jogo
     public void iniciar_jogo(boolean turnoPlayer1) {
-         turnoPlayer1 = true;
+        turnoPlayer1 = true;
 
         while (Player_1.estavivo() && Player_2.estavivo()) {
             if (turnoPlayer1) {
@@ -50,6 +50,8 @@ public class Jogo {
         } else {
             System.out.println("PARABÉNS!! "+ Player_2.getNome() + " venceu o duelo!");
         }
+
+
     }
 
     private void turnoJogador(Personagem jogador, Personagem inimigo, boolean turnoPlayer1, Actions player_action) {
