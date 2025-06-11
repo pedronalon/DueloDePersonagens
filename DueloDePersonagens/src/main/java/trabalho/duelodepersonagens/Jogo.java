@@ -1,44 +1,43 @@
 package trabalho.duelodepersonagens;
 
 
-import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Jogo {
-    private Personagem Player_1;
-    private Personagem Player_2;
-    private boolean ehPVE;
+    private final Personagem Player_1;
+    private final Personagem Player_2;
+    private final boolean ehPVE;
     private final Scanner teclado;
-    private Menus menu;
-    private Random random;
-    private Actions p1_action, p2_action;
+    private final Menus menu;
+    private final Actions p1_action, p2_action;
+    private boolean turnoPlayer1;
 
     /// Inicializa todas as variaveis
     public Jogo(Scanner teclado) {
         this.teclado = teclado;
         this.menu = new Menus(teclado);
-        this.random = new Random();
+        Random random = new Random();
         this.Player_1 = menu.getPlayer_1();
         this.Player_2 = menu.getPlayer_2();
         this.ehPVE = menu.isEhPVE();
-        geraPosicaoInicial(Player_1, Player_2);
+        geraPosicaoInicial(Player_1, Player_2, random);
         p1_action = new Actions(Player_1);
         p2_action = new Actions(Player_2);
     }
 
     /// Laço principal do jogo
-    public void iniciar_jogo() {
-        boolean turnoPlayer1 = true;
+    public void iniciar_jogo(boolean turnoPlayer1) {
+         turnoPlayer1 = true;
 
-        while (Player_1.esta_vivo() && Player_2.esta_vivo()) {
+        while (Player_1.estavivo() && Player_2.estavivo()) {
             if (turnoPlayer1) {
-                turnoJogador(Player_1, Player_2, turnoPlayer1);
+                turnoJogador(Player_1, Player_2, turnoPlayer1, p1_action);
             } else {
                 if (ehPVE) {
                     turnoBot(Player_2, Player_1);
                 } else {
-                    turnoJogador(Player_2, Player_1, turnoPlayer1);
+                    turnoJogador(Player_2, Player_1, turnoPlayer1, p2_action);
                 }
             }
             /// Inverte o turno do jogador.
@@ -46,15 +45,14 @@ public class Jogo {
         }
 
         /// Verifica o vencedor
-        if (Player_1.esta_vivo()) {
+        if (Player_1.estavivo()) {
             System.out.println("PARABÉNS!! "+ Player_1.getNome() + " venceu o duelo!");
         } else {
             System.out.println("PARABÉNS!! "+ Player_2.getNome() + " venceu o duelo!");
         }
     }
 
-    private void turnoJogador(Personagem jogador, Personagem inimigo, boolean turnoPlayer1) {
-        Actions jogador_action = new Actions(jogador);
+    private void turnoJogador(Personagem jogador, Personagem inimigo, boolean turnoPlayer1, Actions player_action) {
         System.out.println("\n--- Turno de " + jogador.getNome() + " ---");
         menu.ImprimeDados(jogador, inimigo);
 
@@ -72,20 +70,19 @@ public class Jogo {
             case 1:
                 System.out.println("Digite a direção (C - Cima, B - Baixo, E - Esquerda, D - Direita):");
                 String direcao = teclado.next();
-                jogador_action.Andar(direcao);
+                player_action.Andar(direcao);
                 break;
             case 2:
-                jogador_action.atacar(inimigo);
+                player_action.atacar(inimigo);
                 break;
             case 3:
-                jogador_action.Defender();
+                player_action.Defender();
                 break;
             case 4:
                 jogador.AtivarPoderEspecial(inimigo);
                 break;
             case 5:
                 jogador.setPontosDeVida(0);
-
         }
 
     }
@@ -132,19 +129,9 @@ public class Jogo {
         /// Executa a ação escolhida
         switch (acao) {
             case 1-> moverBotParaJogador(bot, jogador); /// Mover
-
-            case 2->{ /// Atacar
-                bot_action.atacar(jogador);
-            }
-            case 3->{  /// Defender
-                bot_action.Defender();
-
-            }
-
-            case 4-> { /// Poder especial
-                bot.AtivarPoderEspecial(jogador);
-
-            }
+            case 2-> bot_action.atacar(jogador); /// Atacar
+            case 3-> bot_action.Defender(); /// Defender
+            case 4-> bot.AtivarPoderEspecial(jogador); /// Poder especial
         }
     }
 
@@ -218,8 +205,7 @@ public class Jogo {
 
 
     /// Gera novas posições para os 2 jogadores, até que haja uma distância mínima de 3 casas.
-    public void geraPosicaoInicial(Personagem player_1, Personagem player_2) {
-        Random random = new Random();
+    public void geraPosicaoInicial(Personagem player_1, Personagem player_2, Random random) {
         EscolheValoresPosicao(random, player_1);
 
         /// Garante que o player 2 não fique muito perto do player 1

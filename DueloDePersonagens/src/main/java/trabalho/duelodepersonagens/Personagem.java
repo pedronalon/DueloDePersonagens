@@ -26,7 +26,7 @@ public abstract class Personagem {
     }
 
 
-    public boolean esta_vivo(){
+    public boolean estavivo(){
         return getPontosDeVida()>0;
     }
 

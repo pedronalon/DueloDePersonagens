@@ -48,7 +48,7 @@ public class Actions {
     }
 
 
-    /// Realiza as alterações na posição do jogador no mapa, em seu índice linha ou coluna.
+    /// Realiza as alterações na posição do jogador no mapa, em seu índice linha ou coluna com base no caractere escolhido.
     private boolean EscolheDirecional(Character direcional) {
         switch(direcional) {
             case 'C':
@@ -77,7 +77,7 @@ public class Actions {
 
 
     /// Utiliza o metodo que verifica se o inimigo está dentro do seu alcance, e então, ataca.
-    public void atacar(Personagem Inimigo){
+    public void atacar(Personagem Inimigo){ /// Distância de Chebyshev
         if(personagem.EstaNoAlcance(Inimigo)){ //max(0, forcaDeAtaque do atacante - forcaDeDefesa do alvo).
             int dano = Math.max(0, personagem.getForcaDeAtaque() - Inimigo.getDefesaAtual());
 

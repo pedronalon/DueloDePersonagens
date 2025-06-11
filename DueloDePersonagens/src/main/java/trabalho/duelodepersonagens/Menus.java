@@ -1,13 +1,13 @@
 package trabalho.duelodepersonagens;
 
 
-import java.util.Random;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menus {
     private final String[][] arena = new String[10][10];
-    private Personagem Player_1;
-    private Personagem Player_2;
+    private final Personagem Player_1;
+    private final Personagem Player_2;
     private boolean ehPVE;
 
 
@@ -15,16 +15,13 @@ public class Menus {
         InicializaArena();
         MenuInicial();
         Seleciona_Modo(teclado);
-        Personaliza_Personagem(teclado);
+        CriaPersonagem criaPersonagens = new CriaPersonagem();
+
+        List<Personagem> jogadoresCriados = criaPersonagens.criarJogadores(teclado, ehPVE);
+        this.Player_1 = jogadoresCriados.get(0);
+        this.Player_2 = jogadoresCriados.get(1);
     }
 
-    public Personagem getPlayer_1() {
-        return Player_1;
-    }
-
-    public Personagem getPlayer_2() {
-        return Player_2;
-    }
 
     public void InicializaArena(){
         ///...preenche a matriz de strings 10x10 com "[  ]" em cada string.
@@ -102,60 +99,8 @@ public class Menus {
 
         teclado.nextLine();
         ehPVE = ModoDeJogo.equals("2");
-
-
     }
 
-    private void Personaliza_Personagem(Scanner teclado) {
-        Player_1 = getInfo(1, teclado);
-        Player_2 = getInfo(2, teclado);
-    }
-
-    /// Cria, conforme o modo de jogo, dois personages
-    private Personagem getInfo(int num, Scanner teclado){
-        if(num == 1 || !ehPVE){     // Dupla verificação para não serem criados dois bots.
-                                    //Caso o modo de jogo escolhido seja PvP
-            System.out.println("Jogador " + num + ", digite seu nome: ");
-            String nome = teclado.nextLine();
-            System.out.println("Ótimo. Seja bem-vindo, " + nome + "! Agora, escolha uma classe! As opçoes são: ");
-            imprimeClasses();
-
-            String classe = teclado.next();
-            while (!classe.equals("1") && !classe.equals("2") && !classe.equals("3")){
-                System.out.println("Por favor, escolha uma classe válida!");
-                classe = teclado.next();
-            }
-
-            teclado.nextLine();
-            int escolhaClasse = Integer.parseInt(classe);
-            return Seleciona_Personagem(escolhaClasse, nome);
-        }
-
-        else{
-            // caso o modo de jogo escolhido seja PvE
-            int classe_bot = new Random().nextInt(3) + 1;
-            String NomeBot;
-            switch (classe_bot) {
-                case 1-> NomeBot = "Ragnar";
-                case 2-> NomeBot = "Gandalf";
-                case 3-> NomeBot = "Légolas";
-                default-> NomeBot = "BOT";
-            }
-            return Seleciona_Personagem(classe_bot, NomeBot);
-        }
-
-    }
-
-    /// Cria o personagem selecionado
-    private Personagem Seleciona_Personagem(int classe, String Nome) {
-
-        return switch (classe) {
-            case 1 -> new Guerreiro(Nome);
-            case 2 -> new Mago(Nome);
-            case 3 -> new Arqueiro(Nome);
-            default -> null;
-        };
-    }
 
     /// Imprime as opções de ação do jogador
     public int Menu_de_Combate(Personagem jogador, Personagem inimigo, Scanner teclado) {
@@ -175,42 +120,17 @@ public class Menus {
         return Integer.parseInt(acao);
     }
 
-
-    /// Primeira impressão das classes, para escolha do jogador
-    private static void imprimeClasses() { //forma mais amigável ao usuário de visualizar as informações
-        String[] guerreiro = {
-                "(1) Guerreiro:",
-                "     Vida: 100",
-                "     Ataque: 15",
-                "     Defesa: 10",
-                "     Alcance: 1"
-        };
-
-        String[] mago = {
-                "(2) Mago:",
-                "     Vida: 100",
-                "     Ataque: 10",
-                "     Defesa: 7",
-                "     Alcance: 3"
-        };
-
-        String[] arqueiro = {
-                "(3) Arqueiro:",
-                "     Vida: 100",
-                "     Ataque: 8",
-                "     Defesa: 5",
-                "     Alcance: 5"
-        };
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-25s %-25s %-25s\n", guerreiro[i], mago[i], arqueiro[i]);
-            // %s é para puxar a string
-            // -25 é para alinhar à esquerda, 25 caracteres
-        }
-    }
-
     /// Retorna a informação de que o jogo é pvp ou pve
     public boolean isEhPVE() {
         return ehPVE;
+    }
+
+    public Personagem getPlayer_1() {
+        return Player_1;
+    }
+
+    public Personagem getPlayer_2() {
+        return Player_2;
     }
 }
 

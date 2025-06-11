@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author Heitor
+ * @author Heitor Coelho, Pedro Nalon
  */
 public class DueloDePersonagens {
 
@@ -21,7 +21,8 @@ public class DueloDePersonagens {
         Scanner teclado = new Scanner(System.in);
         do{
             Jogo jogo = new Jogo(teclado);
-            jogo.iniciar_jogo();
+            jogo.iniciar_jogo(true);
+
             System.out.println("Deseja jogar novamente? \n (s) para sim\n (n) para nao");
             String resposta = teclado.next();
             resposta = resposta.toUpperCase();
